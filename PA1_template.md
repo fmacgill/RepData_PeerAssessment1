@@ -39,11 +39,37 @@ median(steps, na.rm = TRUE)
 ## What is the average daily activity pattern?
 
 ```r
-y <- tapply(dat$steps, dat$interval, FUN=sum, na.rm=TRUE)
+stepsPerInterval <- tapply(dat$steps, dat$interval, FUN=mean, na.rm=TRUE)
+
+plot(stepsPerInterval)
+```
+
+![](./PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+### Summary 
+The 5-minute interval that, on average, contains the maximum number of steps is 0835 with and average 206.2 steps
+
+
+```r
+summary(stepsPerInterval)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.000   2.486  34.110  37.380  52.830 206.200
+```
+
+```r
+which.max(stepsPerInterval)
+```
+
+```
+## 835 
+## 104
+```
 
 ## Imputing missing values
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```
+
