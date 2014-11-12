@@ -6,17 +6,20 @@ output:
 ---
 
 
-## Loading and preprocessing the data
+## Loading and preprocessing
+the data
 Load data and prepocess it into a time sequence
-```{r}
+```{r read_data}
 dat <- read.csv('activity.csv')
+dat$date <- as.POSIXlt(as.character(dat$date),format="%Y-%m-%d")
 dat$time <- sprintf('%04d', dat$interval)
+dat$inter <- as.factor(dat$interval)
 
 ```
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+```{r mean_median}
 
 steps <- tapply(dat$steps,as.character(dat$date),FUN=sum, na.rm=TRUE)
 
@@ -26,24 +29,39 @@ median(steps, na.rm = TRUE)
 ```
 
 ## What is the average daily activity pattern?
-```{r}
+```{r daily_activity_pattern}
 
 stepsPerInterval <- tapply(dat$steps, dat$interval, FUN=mean, na.rm=TRUE)
 
-plot(stepsPerInterval)
+plot(stepsPerInterval,type = "l")
 
 ```
-### Summary 
+### Most active time period. 
 The 5-minute interval that, on average, contains the maximum number of steps is 0835 with and average 206.2 steps
 
-```{r}
+```{r summary}
 summary(stepsPerInterval)
 which.max(stepsPerInterval)
 ```
 
 ## Imputing missing values
+I chose to replace missing values with the median (ignoring NA) for the interval.
+Median reduces the effect of outliers.
 
+```{r imputing}
 
+imputeMedian <- function(x){
+    x[is.na(x)] <- median(x,na.rm = TRUE)
+    return(x)
+}
+
+dat2 <- dat
+dat2$interval <- tapply(dat$steps,dat$inter,FUN = imputeMedian)
+
+head(dat)
+head(dat2)
+
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
