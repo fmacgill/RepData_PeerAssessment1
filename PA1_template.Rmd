@@ -55,8 +55,10 @@ imputeMedian <- function(x){
     return(x)
 }
 
+tmp <- with(dat,aggregate(steps,list(interval),FUN = imputeMedian))
+
 dat2 <- dat
-dat2$interval <- tapply(dat$steps,dat$inter,FUN = imputeMedian)
+dat2$steps <- as.vector(tmp$x)
 
 head(dat)
 head(dat2)

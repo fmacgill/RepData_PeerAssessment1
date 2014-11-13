@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1415781533720.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "FB501049",
+    "lastKnownWriteTime" : 8389754657483784192,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "tm",
+        "contentUrl" : "content?title=tm&file=1aaf2eeea7e4430eaba4c3e9feb0b361.htm",
+        "displayedObservations" : 288,
+        "displayedVariables" : 62,
+        "totalObservations" : 288,
+        "variables" : 62
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}
