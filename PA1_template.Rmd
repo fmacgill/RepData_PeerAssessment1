@@ -21,7 +21,7 @@ dat$date <- as.POSIXlt(as.character(dat$date),format="%Y-%m-%d")
 ```{r mean_median}
 steps <- tapply(dat$steps,as.character(dat$date),FUN=sum, na.rm=TRUE)
 
-hist(steps,breaks = 10, main='Total number of steps per day')
+hist(steps,breaks = 20, main='Total number of steps per day',na.rm=TRUE)
 origDailyMean <-mean(steps, na.rm = TRUE)
 origDailyMedian <- median(steps, na.rm = TRUE)
 ```
@@ -68,12 +68,20 @@ dat2$steps <- as.vector(tmp$x)
 
 ```
 
-After imputing the missing values What is mean total number of steps taken per day?
+### Effects of Imputation
 
-```{r mean_median_imputed}
+After imputing the missing values, I recreated the histgram of total number steps per day. There are distinct difference in the first two left columns.
+
+```{r imputed_hist}
 impSteps <- tapply(dat2$steps,as.character(dat$date),FUN=sum, na.rm=TRUE)
 
-hist(impSteps,breaks = 10, main='Total number of steps per day (after imputing)')
+hist(impSteps,breaks = 20, main='Total number of steps per day (after imputing)')
+```
+
+Now compare the mean and medians for daily steps using a table to display differences
+
+
+```{r mean_median_imputed, results='asis'}
 impDailyMean <- mean(impSteps)
 impDailyMedian <- median(impSteps)
 
@@ -83,7 +91,9 @@ colnames(comparisionSummary) <- c('with NA', 'after imputation')
 rownames(comparisionSummary) <- c('mean', 'median')
 xt <- xtable(as.table(comparisionSummary))
 print(xt, type='html')
-```
+``` 
+
+Imputation utiliseing the median time interval step value has not effected the median daily step count, but has increased the mean daily step count. 
 
 
 ```{r activity_pattern_imputed}
@@ -106,15 +116,14 @@ summary(stepsPerInterval)
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ```{r weekends}
- weekend <- subset(dat2, (weekdays(dat2$date) %in% c('Saturday','Sunday')))
- weekday <- subset(dat2, !(weekdays(dat2$date) %in% c('Saturday','Sunday')))
- 
- weekendStepsPerInterval <- tapply(weekend$steps, weekend$interval, FUN=mean)
- weekdayStepsPerInterval <- tapply(weekday$steps, weekday$interval, FUN=mean)
- 
+
+dat2$day <- as.factor(ifelse(weekdays(dat2$date) %in% c('Saturday','Sunday'),'Weekend','Weekday'))
+
+dat3 <- tapply(dat2$steps, list(dat2$day,dat2$interval),FUN=mean)
+
 par(mfrow=c(1,2))
-plot(rownames(weekendStepsPerInterval),weekendStepsPerInterval,type = "l", xlab = "interval", ylab="steps", main="Weekend Day")
-plot(rownames(weekdayStepsPerInterval),weekdayStepsPerInterval,type = "l", xlab = "interval", ylab="step", main="Weekend Days")
+plot(colnames(dat3),dat3[2,],type = "l", xlab = "interval", ylab="steps", main="Weekend Day")
+plot(colnames(dat3),dat3[1,],type = "l", xlab = "interval", ylab="step", main="Weekday Days")
 ```  
 
 There are differences between activity patterns on weekends and weekday.  
